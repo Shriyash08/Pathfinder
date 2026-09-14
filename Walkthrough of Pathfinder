@@ -1,0 +1,33 @@
+# PathFinder Deployment Walkthrough
+
+The PathFinder career intelligence platform is now live on Google Cloud Run!
+
+## Live Links
+- **Frontend**: [https://pathfinder-frontend-m5gjb5q4gq-uc.a.run.app](https://pathfinder-frontend-m5gjb5q4gq-uc.a.run.app)
+- **Backend API**: [https://pathfinder-backend-m5gjb5q4gq-uc.a.run.app/api/roles](https://pathfinder-backend-m5gjb5q4gq-uc.a.run.app/api/roles)
+
+## Changes Made
+
+### 1. Backend Containerization
+- **Created [requirements.txt](file:///e:/Pathfinder/backend/requirements.txt)**: Specified `fastapi` and `uvicorn`.
+- **Created [Dockerfile](file:///e:/Pathfinder/backend/Dockerfile)**: Python 3.11-slim base, optimized for Cloud Run.
+- **Service Name**: `pathfinder-backend`
+
+### 2. Frontend Modernization & Containerization
+- **Dynamic API Connectivity**: Updated `e:\Pathfinder\frontend\src\app\page.tsx` to use `NEXT_PUBLIC_API_URL`.
+- **Created Multi-stage [Dockerfile](file:///e:/Pathfinder/frontend/Dockerfile)**:
+    - **Stage 1 (Builder)**: Builds the Next.js app with the backend URL baked in.
+    - **Stage 2 (Runner)**: Minimal production-ready node environment.
+- **Service Name**: `pathfinder-frontend`
+
+### 3. Cloud Infrastructure
+- **Project**: `fifth-point-495106-c4` (Google Run Trails)
+- **Region**: `us-central1`
+- **Security**: Both services are publicly accessible (`--allow-unauthenticated`).
+
+## Verification Results
+- **Backend API Check**: Confirmed that `https://pathfinder-backend-m5gjb5q4gq-uc.a.run.app/api/roles` returns the full JSON list of 47 professions.
+- **Frontend Build**: Successfully compiled and deployed. The website is now serving the "Symphony" design system live.
+
+> [!TIP]
+> **Pro-Tip**: You can now access your website from any device. The frontend automatically connects to the cloud backend, ensuring a seamless experience across mobile and desktop.

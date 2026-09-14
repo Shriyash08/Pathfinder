@@ -1,0 +1,21 @@
+{
+  "name": "PathFinder",
+  "short_name": "PathFinder",
+  "description": "A comprehensive career guidance and tech-roadmap portal.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF5F0",
+  "theme_color": "#2C1E16",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
