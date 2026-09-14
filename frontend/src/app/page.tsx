@@ -47,20 +47,52 @@ export default function Home() {
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     fetch(`${apiUrl}/api/roles`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("API response not ok");
+        return res.json();
+      })
       .then(data => setRoles(data))
-      .catch(err => console.error("Error fetching roles:", err));
+      .catch(err => {
+        console.warn("Backend API unavailable, falling back to local static dataset:", err);
+        fetch("/roles_db.json")
+          .then(res => res.json())
+          .then((data: Role[]) => {
+            const summaries = data.map(role => ({
+              role_name: role.role_name,
+              role_vibe: role.role_vibe,
+              market_confidence_score: 85
+            }));
+            setRoles(summaries);
+          })
+          .catch(e => console.error("Error loading static fallback:", e));
+      });
   }, []);
 
   const handleSelectRole = (roleName: string) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     fetch(`${apiUrl}/api/roles/${encodeURIComponent(roleName)}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("API response not ok");
+        return res.json();
+      })
       .then(data => {
         setSelectedRole(data);
         setShowExploreAll(false);
       })
-      .catch(err => console.error("Error fetching role details:", err));
+      .catch(err => {
+        console.warn("Backend API unavailable, fetching role detail from static dataset:", err);
+        fetch("/roles_db.json")
+          .then(res => res.json())
+          .then((data: Role[]) => {
+            const match = data.find(r => r.role_name.toLowerCase() === roleName.toLowerCase());
+            if (match) {
+              match.market_confidence_score = 85;
+              setSelectedRole(match);
+              setShowExploreAll(false);
+            }
+          })
+          .catch(e => console.error("Error loading static role details:", e));
+      });
   };
 
   const filteredRoles = roles.filter(r =>
